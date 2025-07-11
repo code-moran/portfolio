@@ -12,9 +12,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold gradient-text">John Doe</h3>
+            <h3 className="text-2xl font-bold gradient-text">Titus Njiru</h3>
             <p className="text-gray-400 leading-relaxed">
-              Full Stack Developer & UI/UX Designer passionate about creating 
+              Systems Development Consultant passionate about creating 
               beautiful and functional digital experiences.
             </p>
           </div>
@@ -44,9 +44,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-white">Get In Touch</h4>
             <div className="space-y-2 text-gray-400">
-              <p>john.doe@example.com</p>
-              <p>+1 (555) 123-4567</p>
-              <p>San Francisco, CA</p>
+              <p>njirutitus@gmail.com</p>
+              <p>+254707015033</p>
+              <p>Nairobi, Kenya</p>
             </div>
           </div>
         </div>

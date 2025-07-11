@@ -12,7 +12,7 @@ const HeroSection = () => {
   })
 
   const [text, setText] = useState('')
-  const fullText = "Full Stack Developer & UI/UX Designer"
+  const fullText = "Systems Development Consultant"
 
   useEffect(() => {
     let index = 0
@@ -61,14 +61,12 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Hi, I&apos;m{' '}
-            <span className="gradient-text">John Doe</span>
+            Hi, I&apos;m{' '}            <span className="gradient-text">Titus Njiru</span>
           </h1>
           
           <div className="h-8 mb-8">
             <p className="text-xl md:text-2xl text-gray-300">
-              {text}
-              <span className="animate-pulse">|</span>
+              {text}<span className="animate-pulse">|</span>
             </p>
           </div>
 
