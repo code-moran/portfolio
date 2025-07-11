@@ -87,19 +87,19 @@ const ContactSection = () => {
                   {
                     icon: Mail,
                     label: 'Email',
-                    value: 'john.doe@example.com',
-                    href: 'mailto:john.doe@example.com'
+                    value: 'njirutitus@gmail.com',
+                    href: 'mailto:njirutitus@gmail.com'
                   },
                   {
                     icon: Phone,
                     label: 'Phone',
-                    value: '+1 (555) 123-4567',
-                    href: 'tel:+15551234567'
+                    value: '+254707015033',
+                    href: 'tel:+254707015033'
                   },
                   {
                     icon: MapPin,
                     label: 'Location',
-                    value: 'San Francisco, CA',
+                    value: 'Nairobi, Kenya',
                     href: '#'
                   }
                 ].map(({ icon: Icon, label, value, href }) => (

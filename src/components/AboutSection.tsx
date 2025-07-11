@@ -6,40 +6,46 @@ import { Code, Palette, Smartphone, Database, Globe, Zap } from 'lucide-react'
 
 const skills = [
   {
-    category: 'Frontend',
+    category: 'Frontend Web Development',
     icon: Code,
-    skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
+    skills: ['ReactJS', 'HTML/CSS', 'jQuery', 'PHP'],
     color: 'from-blue-500 to-cyan-500'
   },
   {
-    category: 'Backend',
+    category: 'Backend Development',
     icon: Database,
-    skills: ['Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'GraphQL'],
+    skills: ['NodeJS', 'Springboot', 'Python/Django', 'Postman', 'C/C++', 'PHP/Laravel'],
     color: 'from-green-500 to-emerald-500'
   },
   {
-    category: 'Design',
+    category: 'Data Science',
+    icon: Zap,
+    skills: ['scikit-learn', 'pandas', 'matplotlib'],
+    color: 'from-yellow-500 to-orange-500'
+  },
+  {
+    category: 'Adobe Creative',
     icon: Palette,
-    skills: ['Figma', 'Adobe XD', 'Photoshop', 'Illustrator', 'Prototyping'],
+    skills: ['Photoshop', 'Illustrator', 'InDesign', 'Fireworks'],
     color: 'from-purple-500 to-pink-500'
   },
   {
-    category: 'Mobile',
+    category: 'Mobile Programming',
     icon: Smartphone,
-    skills: ['React Native', 'Flutter', 'iOS', 'Android', 'Cross-platform'],
+    skills: ['Android - Java', 'React Native'],
     color: 'from-orange-500 to-red-500'
   },
   {
-    category: 'Cloud & DevOps',
+    category: 'Content Management Systems',
     icon: Globe,
-    skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
+    skills: ['Wordpress', 'Joomla', 'Mailchimp'],
     color: 'from-indigo-500 to-purple-500'
   },
   {
-    category: 'Tools & Others',
-    icon: Zap,
-    skills: ['Git', 'Webpack', 'Jest', 'Storybook', 'Agile'],
-    color: 'from-yellow-500 to-orange-500'
+    category: 'Database Management',
+    icon: Database,
+    skills: ['MySQL', 'Oracle', 'MsSQL', 'MongoDB'],
+    color: 'from-red-500 to-rose-500'
   }
 ]
 
@@ -84,9 +90,7 @@ const AboutSection = () => {
               About <span className="gradient-text">Me</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                  I&apos;m a passionate developer with 5+ years of experience creating digital solutions 
-            that make a difference. I love combining technical expertise with creative design 
-            to build products that users love.
+                  I&apos;m a passionate Systems Development Consultant with experience in full-stack development, data science, and cloud technologies. I love combining technical expertise with creative problem-solving to build robust and user-centered digital solutions.
             </p>
           </motion.div>
 
