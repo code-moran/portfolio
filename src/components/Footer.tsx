@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Heart } from 'lucide-react'
+import { motion } from "framer-motion";
+import { Heart, Github, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-gray-900 border-t border-gray-800">
@@ -14,8 +14,8 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-2xl font-bold gradient-text">Titus Njiru</h3>
             <p className="text-gray-400 leading-relaxed">
-              Systems Development Consultant passionate about creating 
-              beautiful and functional digital experiences.
+              Systems Development Consultant passionate about creating beautiful
+              and functional digital experiences.
             </p>
           </div>
 
@@ -24,9 +24,9 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
             <div className="space-y-2">
               {[
-                { name: 'About', href: '#about' },
-                { name: 'Projects', href: '#projects' },
-                { name: 'Contact', href: '#contact' },
+                { name: "About", href: "#about" },
+                { name: "Projects", href: "#projects" },
+                { name: "Contact", href: "#contact" },
               ].map((link) => (
                 <motion.a
                   key={link.name}
@@ -59,7 +59,7 @@ const Footer = () => {
               transition={{ delay: 0.5 }}
               className="text-gray-400 flex items-center space-x-2"
             >
-              <span>© {currentYear} John Doe. Made with</span>
+              <span>© {currentYear} Titus Njiru. Made with</span>
               <motion.span
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
@@ -75,16 +75,33 @@ const Footer = () => {
               transition={{ delay: 0.7 }}
               className="mt-4 md:mt-0"
             >
-              <p className="text-gray-400 text-sm">
-                Built with Next.js & Tailwind CSS
-              </p>
+              <div className="flex space-x-4">
+                {[
+                  { icon: Github, href: "https://github.com/njirutitus" },
+                  {
+                    icon: Linkedin,
+                    href: "https://www.linkedin.com/in/titusnjiru/",
+                  },
+                  { icon: Mail, href: "mailto:njirutitus@gmail.com" },
+                ].map(({ icon: Icon, href }, index) => (
+                  <motion.a
+                    key={index}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    className="text-gray-400 hover:text-cyan-400 transition-colors duration-300"
+                  >
+                    <Icon size={20} />
+                  </motion.a>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
-
+export default Footer;

@@ -95,13 +95,14 @@ const HeroSection = () => {
 
           <div className="flex justify-center space-x-6">
             {[
-              { icon: Github, href: '#', label: 'GitHub' },
-              { icon: Linkedin, href: '#', label: 'LinkedIn' },
-              { icon: Mail, href: '#', label: 'Email' },
+              { icon: Github, href: 'https://github.com/njirutitus', label: 'GitHub' },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/titusnjiru/', label: 'LinkedIn' },
+              { icon: Mail, href: 'njirutitus@gmail.com', label: 'Email' },
             ].map(({ icon: Icon, href, label }) => (
               <motion.a
                 key={label}
                 href={href}
+                target='blank'
                 whileHover={{ scale: 1.2, y: -5 }}
                 className="p-3 glass-effect rounded-full hover:bg-cyan-500/20 transition-all duration-300"
                 aria-label={label}
