@@ -10,6 +10,10 @@ const currencyFormatter = new Intl.NumberFormat("en-KE", {
 
 const personalRelief = 2400;
 const insuranceReliefCap = 5000;
+const nssfRate = 0.06;
+const nssfLowerEarningsLimit = 9000;
+const nssfUpperEarningsLimit = 108000;
+const pensionReliefCap = 30000;
 
 const payeBands = [
   { limit: 24000, rate: 0.1 },
@@ -22,29 +26,34 @@ const payeBands = [
 export default function PayeCalculator() {
   const [grossPay, setGrossPay] = useState(150000);
   const [taxableBenefits, setTaxableBenefits] = useState(0);
-  const [pensionContribution, setPensionContribution] = useState(4320);
+  const [pensionablePay, setPensionablePay] = useState(150000);
+  const [voluntaryPensionContribution, setVoluntaryPensionContribution] = useState(0);
   const [mortgageInterest, setMortgageInterest] = useState(0);
   const [insurancePremium, setInsurancePremium] = useState(0);
   const [otherDeductions, setOtherDeductions] = useState(0);
+  const [includeNssf, setIncludeNssf] = useState(true);
   const [includeShif, setIncludeShif] = useState(true);
   const [includeHousingLevy, setIncludeHousingLevy] = useState(true);
 
   const result = useMemo(() => {
+    const nssf = includeNssf ? calculateNssf(pensionablePay) : { tierOne: 0, tierTwo: 0, employeeTotal: 0, employerTotal: 0 };
     const shif = includeShif && grossPay > 0 ? Math.max(300, grossPay * 0.0275) : 0;
     const housingLevy = includeHousingLevy ? grossPay * 0.015 : 0;
-    const pensionRelief = Math.min(pensionContribution, 30000);
+    const pensionRelief = Math.min(nssf.employeeTotal + voluntaryPensionContribution, pensionReliefCap);
     const mortgageRelief = Math.min(mortgageInterest, 30000);
     const taxablePay = Math.max(0, grossPay + taxableBenefits - pensionRelief - mortgageRelief - shif - housingLevy);
     const grossTax = calculatePayeBeforeRelief(taxablePay);
     const insuranceRelief = Math.min(insurancePremium * 0.15, insuranceReliefCap);
     const totalRelief = personalRelief + insuranceRelief;
     const paye = Math.max(0, grossTax - totalRelief);
-    const statutoryDeductions = shif + housingLevy + pensionContribution + otherDeductions;
+    const statutoryDeductions = shif + housingLevy + nssf.employeeTotal + voluntaryPensionContribution + otherDeductions;
     const netPay = grossPay - statutoryDeductions - paye;
 
     return {
+      nssf,
       shif,
       housingLevy,
+      pensionRelief,
       taxablePay,
       grossTax,
       insuranceRelief,
@@ -53,7 +62,18 @@ export default function PayeCalculator() {
       statutoryDeductions,
       netPay,
     };
-  }, [grossPay, includeHousingLevy, includeShif, insurancePremium, mortgageInterest, otherDeductions, pensionContribution, taxableBenefits]);
+  }, [
+    grossPay,
+    includeHousingLevy,
+    includeNssf,
+    includeShif,
+    insurancePremium,
+    mortgageInterest,
+    otherDeductions,
+    pensionablePay,
+    taxableBenefits,
+    voluntaryPensionContribution,
+  ]);
 
   return (
     <section className="section-padding">
@@ -63,12 +83,14 @@ export default function PayeCalculator() {
           <div className="mt-6 space-y-5">
             <NumberField label="Gross monthly pay" value={grossPay} onChange={setGrossPay} />
             <NumberField label="Taxable benefits" value={taxableBenefits} onChange={setTaxableBenefits} />
-            <NumberField label="Pension / NSSF contribution" value={pensionContribution} onChange={setPensionContribution} />
+            <NumberField label="NSSF pensionable pay" value={pensionablePay} onChange={setPensionablePay} />
+            <NumberField label="Voluntary pension contribution" value={voluntaryPensionContribution} onChange={setVoluntaryPensionContribution} />
             <NumberField label="Mortgage interest relief deduction" value={mortgageInterest} onChange={setMortgageInterest} />
             <NumberField label="Insurance premium" value={insurancePremium} onChange={setInsurancePremium} />
             <NumberField label="Other deductions" value={otherDeductions} onChange={setOtherDeductions} />
 
             <div className="grid gap-3 sm:grid-cols-2">
+              <Toggle label="Include NSSF Tier I and II" checked={includeNssf} onChange={setIncludeNssf} />
               <Toggle label="Include SHIF at 2.75% min KSh 300" checked={includeShif} onChange={setIncludeShif} />
               <Toggle label="Include housing levy at 1.5%" checked={includeHousingLevy} onChange={setIncludeHousingLevy} />
             </div>
@@ -89,8 +111,13 @@ export default function PayeCalculator() {
           <div className="panel p-6 sm:p-8">
             <h2 className="text-xl font-semibold text-slate-950">Breakdown</h2>
             <div className="mt-5 divide-y divide-slate-200">
+              <Row label="NSSF Tier I employee contribution" value={result.nssf.tierOne} />
+              <Row label="NSSF Tier II employee contribution" value={result.nssf.tierTwo} />
+              <Row label="Total employee NSSF" value={result.nssf.employeeTotal} />
+              <Row label="Employer NSSF match" value={result.nssf.employerTotal} />
               <Row label="SHIF deduction" value={result.shif} />
               <Row label="Affordable Housing Levy" value={result.housingLevy} />
+              <Row label="Pension relief deduction used for PAYE" value={result.pensionRelief} />
               <Row label="Personal relief" value={personalRelief} />
               <Row label="Insurance relief" value={result.insuranceRelief} />
               <Row label="Total relief" value={result.totalRelief} />
@@ -99,12 +126,27 @@ export default function PayeCalculator() {
           </div>
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
-            This is an estimate for planning. Confirm payroll treatment with KRA guidance or a qualified payroll professional before filing or paying tax.
+            This estimate uses NSSF Tier I at 6% up to KSh 9,000 and Tier II at 6% from KSh 9,001 to KSh 108,000. Confirm payroll treatment with KRA, NSSF, or a qualified payroll professional before filing or paying tax.
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+function calculateNssf(pensionablePay: number) {
+  const tierOnePensionablePay = Math.min(Math.max(pensionablePay, 0), nssfLowerEarningsLimit);
+  const tierTwoPensionablePay = Math.min(Math.max(pensionablePay - nssfLowerEarningsLimit, 0), nssfUpperEarningsLimit - nssfLowerEarningsLimit);
+  const tierOne = tierOnePensionablePay * nssfRate;
+  const tierTwo = tierTwoPensionablePay * nssfRate;
+  const employeeTotal = tierOne + tierTwo;
+
+  return {
+    tierOne,
+    tierTwo,
+    employeeTotal,
+    employerTotal: employeeTotal,
+  };
 }
 
 function calculatePayeBeforeRelief(taxablePay: number) {
