@@ -1,12 +1,60 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://titusnjiru.com";
 
 export const metadata: Metadata = {
-  title: 'Titus Njiru - Portfolio',
-  description: 'Full Stack Developer & UI/UX Designer',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Titus Njiru | Systems Development Consultant',
+    template: '%s | Titus Njiru',
+  },
+  description: 'Systems Development Consultant building reliable web, mobile, and data products.',
+  keywords: [
+    'Titus Njiru',
+    'Systems Development Consultant',
+    'Full Stack Developer',
+    'Next.js Developer',
+    'React Developer',
+    'Nairobi Software Consultant',
+  ],
+  authors: [{ name: 'Titus Njiru' }],
+  creator: 'Titus Njiru',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: '/',
+    siteName: 'Titus Njiru',
+    title: 'Titus Njiru | Systems Development Consultant',
+    description: 'Systems Development Consultant building reliable web, mobile, and data products.',
+    images: [
+      {
+        url: '/workspace.jpg',
+        width: 1200,
+        height: 900,
+        alt: 'A clean developer workspace',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Titus Njiru | Systems Development Consultant',
+    description: 'Systems Development Consultant building reliable web, mobile, and data products.',
+    images: ['/workspace.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -15,8 +63,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-gray-900 text-white`}>
+    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
+      <body className="bg-slate-50 text-slate-950">
         {children}
       </body>
     </html>

@@ -1,309 +1,135 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import { ExternalLink, Github, Calendar, Tag } from 'lucide-react'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { Calendar, ExternalLink, Github, Tag } from "lucide-react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import type { ProjectContent, ProjectsSectionContent } from "@/types/portfolio";
 
-const projects = [
-  {
-    id: 1,
-    title: 'E-Commerce Platform',
-    description: 'A full-stack e-commerce solution with React, Node.js, and PostgreSQL. Features include user authentication, payment processing, inventory management, and admin dashboard.',
-    image: '/project1.png',
-    technologies: ['React', 'Node.js', 'PostgreSQL', 'Stripe', 'AWS'],
-    category: 'Full Stack',
-    date: '2024',
-    github: '#',
-    live: '#',
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Task Management App',
-    description: 'A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.',
-    image: '/project2.jpg',
-    technologies: ['Next.js', 'TypeScript', 'Prisma', 'Socket.io'],
-    category: 'Web App',
-    date: '2024',
-    github: '#',
-    live: '#',
-    featured: true
-  },
-  {
-    id: 3,
-    title: 'Mobile Fitness App',
-    description: 'Cross-platform mobile app for fitness tracking with workout plans, progress monitoring, and social features.',
-    image: '/api/placeholder/600/400',
-    technologies: ['React Native', 'Firebase', 'Redux', 'Expo'],
-    category: 'Mobile',
-    date: '2023',
-    github: '#',
-    live: '#',
-    featured: false
-  },
-  {
-    id: 4,
-    title: 'AI-Powered Analytics Dashboard',
-    description: 'Business intelligence dashboard with AI-driven insights, data visualization, and predictive analytics.',
-    image: '/api/placeholder/600/400',
-    technologies: ['Vue.js', 'Python', 'TensorFlow', 'D3.js'],
-    category: 'Data Science',
-    date: '2023',
-    github: '#',
-    live: '#',
-    featured: false
-  },
-  {
-    id: 5,
-    title: 'Real Estate Platform',
-    description: 'Modern real estate platform with property listings, virtual tours, and mortgage calculator.',
-    image: '/api/placeholder/600/400',
-    technologies: ['React', 'GraphQL', 'MongoDB', 'Mapbox'],
-    category: 'Web Platform',
-    date: '2023',
-    github: '#',
-    live: '#',
-    featured: false
-  },
-  {
-    id: 6,
-    title: 'Blockchain Voting System',
-    description: 'Secure voting system built on blockchain technology ensuring transparency and immutability.',
-    image: '/api/placeholder/600/400',
-    technologies: ['Solidity', 'Web3.js', 'Ethereum', 'React'],
-    category: 'Blockchain',
-    date: '2022',
-    github: '#',
-    live: '#',
-    featured: false
-  }
-]
+export default function ProjectsSection({
+  section,
+  projects,
+}: {
+  section: ProjectsSectionContent;
+  projects: ProjectContent[];
+}) {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const categories = useMemo(() => ["All", ...Array.from(new Set(projects.map((project) => project.category)))], [projects]);
 
-const categories = ['All', 'Full Stack', 'Web App', 'Mobile', 'Data Science', 'Web Platform', 'Blockchain']
-
-const ProjectsSection = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
-
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [filteredProjects, setFilteredProjects] = useState(projects)
-
-  useEffect(() => {
-    if (selectedCategory === 'All') {
-      setFilteredProjects(projects)
-    } else {
-      setFilteredProjects(projects.filter(project => project.category === selectedCategory))
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === "All") {
+      return projects;
     }
-  }, [selectedCategory])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
+    return projects.filter((project) => project.category === selectedCategory);
+  }, [projects, selectedCategory]);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6
-      }
-    }
-  }
+  const featuredProjects = filteredProjects.filter((project) => project.featured);
+  const otherProjects = filteredProjects.filter((project) => !project.featured);
 
   return (
-    <section id="projects" className="section-padding">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          ref={ref}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={containerVariants}
-        >
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Featured <span className="gradient-text">Projects</span>
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Here are some of my recent projects that showcase my skills and passion for creating 
-              innovative digital solutions.
-            </p>
-          </motion.div>
+    <section id="projects" className="section-padding bg-white">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <div>
+            <p className="section-kicker">{section.kicker}</p>
+            <h2 className="section-title">{section.headline}</h2>
+            <p className="section-copy">{section.body}</p>
+          </div>
 
-          {/* Category Filter */}
-          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap gap-2 lg:max-w-md lg:justify-end">
             {categories.map((category) => (
               <button
                 key={category}
+                type="button"
                 onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                className={`rounded-md border px-3 py-2 text-sm font-medium transition-colors ${
                   selectedCategory === category
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                    : 'glass-effect hover:bg-cyan-500/10 text-gray-300'
+                    ? "border-slate-950 bg-slate-950 text-white"
+                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                 }`}
               >
                 {category}
               </button>
             ))}
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Featured Projects */}
-          <motion.div variants={itemVariants} className="mb-16">
-            <h3 className="text-2xl font-semibold mb-8 text-center">Featured Work</h3>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {filteredProjects.filter(project => project.featured).map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: index * 0.2 + 0.3 }}
-                  className="glass-effect rounded-2xl overflow-hidden hover-lift group"
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
-                    <div className="absolute top-4 right-4 flex space-x-2">
-                      <motion.a
-                        href={project.github}
-                        whileHover={{ scale: 1.1 }}
-                        className="p-2 glass-effect rounded-full hover:bg-cyan-500/20"
-                      >
-                        <Github size={20} />
-                      </motion.a>
-                      <motion.a
-                        href={project.live}
-                        whileHover={{ scale: 1.1 }}
-                        className="p-2 glass-effect rounded-full hover:bg-cyan-500/20"
-                      >
-                        <ExternalLink size={20} />
-                      </motion.a>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <Tag size={16} className="text-cyan-400" />
-                        <span className="text-sm text-cyan-400">{project.category}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Calendar size={16} className="text-gray-400" />
-                        <span className="text-sm text-gray-400">{project.date}</span>
-                      </div>
-                    </div>
-                    
-                    <h4 className="text-xl font-semibold mb-3 group-hover:text-cyan-400 transition-colors">
-                      {project.title}
-                    </h4>
-                    
-                    <p className="text-gray-300 mb-4 leading-relaxed">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 bg-gray-700/50 rounded-full text-sm text-gray-300"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+        {featuredProjects.length > 0 && (
+          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {featuredProjects.map((project) => (
+              <article key={project.id} className="panel overflow-hidden">
+                <div className="relative h-64 border-b border-slate-200 bg-slate-100">
+                  <Image src={project.image ?? "/project3.jpg"} alt={project.title} fill className="object-cover" />
+                </div>
 
-          {/* Other Projects */}
-          <motion.div variants={itemVariants}>
-            <h3 className="text-2xl font-semibold mb-8 text-center">Other Projects</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProjects.filter(project => !project.featured).map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: index * 0.1 + 0.5 }}
-                  className="glass-effect rounded-xl overflow-hidden hover-lift group"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                      <div className="text-4xl opacity-20">💻</div>
-                    </div>
-                    <div className="absolute top-4 right-4 flex space-x-2">
-                      <motion.a
-                        href={project.github}
-                        whileHover={{ scale: 1.1 }}
-                        className="p-2 glass-effect rounded-full hover:bg-cyan-500/20"
-                      >
-                        <Github size={16} />
-                      </motion.a>
-                      <motion.a
-                        href={project.live}
-                        whileHover={{ scale: 1.1 }}
-                        className="p-2 glass-effect rounded-full hover:bg-cyan-500/20"
-                      >
-                        <ExternalLink size={16} />
-                      </motion.a>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-cyan-400">{project.category}</span>
-                      <span className="text-xs text-gray-400">{project.date}</span>
-                    </div>
-                    
-                    <h4 className="text-lg font-semibold mb-2 group-hover:text-cyan-400 transition-colors">
-                      {project.title}
-                    </h4>
-                    
-                    <p className="text-gray-300 text-sm mb-3 line-clamp-2">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-1">
-                      {project.technologies.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2 py-1 bg-gray-700/50 rounded text-xs text-gray-300"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 3 && (
-                        <span className="px-2 py-1 text-xs text-gray-400">
-                          +{project.technologies.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </motion.div>
+                <div className="p-6">
+                  <ProjectMeta category={project.category} date={project.date} />
+                  <h3 className="mt-4 text-xl font-semibold text-slate-950">{project.title}</h3>
+                  <p className="mt-3 leading-7 text-slate-600">{project.description}</p>
+                  <ProjectTech technologies={project.technologies} />
+                  <ProjectLinks github={project.github} live={project.live} />
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {otherProjects.length > 0 && (
+          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {otherProjects.map((project) => (
+              <article key={project.id} className="panel p-6">
+                <ProjectMeta category={project.category} date={project.date} />
+                <h3 className="mt-4 text-lg font-semibold text-slate-950">{project.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{project.description}</p>
+                <ProjectTech technologies={project.technologies.slice(0, 4)} />
+                <ProjectLinks github={project.github} live={project.live} compact />
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
-  )
+  );
 }
 
-export default ProjectsSection
+function ProjectMeta({ category, date }: { category: string; date: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 text-sm text-slate-500">
+      <span className="inline-flex items-center gap-2">
+        <Tag size={15} />
+        {category}
+      </span>
+      <span className="inline-flex items-center gap-2">
+        <Calendar size={15} />
+        {date}
+      </span>
+    </div>
+  );
+}
 
+function ProjectTech({ technologies }: { technologies: string[] }) {
+  return (
+    <div className="mt-5 flex flex-wrap gap-2">
+      {technologies.map((tech) => (
+        <span key={tech} className="pill">
+          {tech}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ProjectLinks({ github, live, compact = false }: { github: string; live: string; compact?: boolean }) {
+  return (
+    <div className={`flex gap-3 ${compact ? "mt-5" : "mt-6"}`}>
+      <a href={github} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-950">
+        <Github size={16} />
+        Code
+      </a>
+      <a href={live} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-950">
+        <ExternalLink size={16} />
+        Live
+      </a>
+    </div>
+  );
+}
