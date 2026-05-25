@@ -22,8 +22,8 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/#home" className="text-base font-semibold tracking-normal text-slate-950">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <Link href="/#home" className="min-w-0 truncate text-base font-semibold tracking-normal text-slate-950">
           {profile.name}
         </Link>
 
@@ -58,15 +58,16 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           type="button"
           aria-label="Toggle menu"
           aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
           onClick={() => setIsOpen((open) => !open)}
-          className="rounded-md p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
       {isOpen && (
-        <div className="border-t border-slate-200 bg-white px-4 py-4 shadow-sm md:hidden">
+        <div id="mobile-navigation" className="absolute inset-x-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 py-4 shadow-sm md:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-2">
             {navItems.map((item) => (
               <Link

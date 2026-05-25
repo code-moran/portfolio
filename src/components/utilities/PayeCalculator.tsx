@@ -26,7 +26,6 @@ const payeBands = [
 export default function PayeCalculator() {
   const [grossPay, setGrossPay] = useState(150000);
   const [taxableBenefits, setTaxableBenefits] = useState(0);
-  const [pensionablePay, setPensionablePay] = useState(150000);
   const [voluntaryPensionContribution, setVoluntaryPensionContribution] = useState(0);
   const [mortgageInterest, setMortgageInterest] = useState(0);
   const [insurancePremium, setInsurancePremium] = useState(0);
@@ -36,6 +35,7 @@ export default function PayeCalculator() {
   const [includeHousingLevy, setIncludeHousingLevy] = useState(true);
 
   const result = useMemo(() => {
+    const pensionablePay = Math.max(grossPay, 0);
     const nssf = includeNssf ? calculateNssf(pensionablePay) : { tierOne: 0, tierTwo: 0, employeeTotal: 0, employerTotal: 0 };
     const shif = includeShif && grossPay > 0 ? Math.max(300, grossPay * 0.0275) : 0;
     const housingLevy = includeHousingLevy ? grossPay * 0.015 : 0;
@@ -51,6 +51,7 @@ export default function PayeCalculator() {
 
     return {
       nssf,
+      pensionablePay,
       shif,
       housingLevy,
       pensionRelief,
@@ -70,7 +71,6 @@ export default function PayeCalculator() {
     insurancePremium,
     mortgageInterest,
     otherDeductions,
-    pensionablePay,
     taxableBenefits,
     voluntaryPensionContribution,
   ]);
@@ -83,7 +83,6 @@ export default function PayeCalculator() {
           <div className="mt-6 space-y-5">
             <NumberField label="Gross monthly pay" value={grossPay} onChange={setGrossPay} />
             <NumberField label="Taxable benefits" value={taxableBenefits} onChange={setTaxableBenefits} />
-            <NumberField label="NSSF pensionable pay" value={pensionablePay} onChange={setPensionablePay} />
             <NumberField label="Voluntary pension contribution" value={voluntaryPensionContribution} onChange={setVoluntaryPensionContribution} />
             <NumberField label="Mortgage interest relief deduction" value={mortgageInterest} onChange={setMortgageInterest} />
             <NumberField label="Insurance premium" value={insurancePremium} onChange={setInsurancePremium} />
@@ -111,6 +110,7 @@ export default function PayeCalculator() {
           <div className="panel p-6 sm:p-8">
             <h2 className="text-xl font-semibold text-slate-950">Breakdown</h2>
             <div className="mt-5 divide-y divide-slate-200">
+              <Row label="NSSF pensionable pay from gross pay" value={result.pensionablePay} />
               <Row label="NSSF Tier I employee contribution" value={result.nssf.tierOne} />
               <Row label="NSSF Tier II employee contribution" value={result.nssf.tierTwo} />
               <Row label="Total employee NSSF" value={result.nssf.employeeTotal} />
@@ -126,7 +126,7 @@ export default function PayeCalculator() {
           </div>
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
-            This estimate uses NSSF Tier I at 6% up to KSh 9,000 and Tier II at 6% from KSh 9,001 to KSh 108,000. Confirm payroll treatment with KRA, NSSF, or a qualified payroll professional before filing or paying tax.
+            This estimate derives NSSF pensionable pay from gross pay, then applies Tier I at 6% up to KSh 9,000 and Tier II at 6% from KSh 9,001 to KSh 108,000. Confirm payroll treatment with KRA, NSSF, or a qualified payroll professional before filing or paying tax.
           </div>
         </div>
       </div>
