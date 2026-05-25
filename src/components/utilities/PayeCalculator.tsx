@@ -76,11 +76,11 @@ export default function PayeCalculator() {
   ]);
 
   return (
-    <section className="section-padding">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="panel p-6 sm:p-8">
-          <h2 className="text-xl font-semibold text-slate-950">Monthly pay details</h2>
-          <div className="mt-6 space-y-5">
+    <section className="px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+        <div className="panel p-4 sm:p-5">
+          <h2 className="text-base font-semibold text-slate-950">Monthly pay details</h2>
+          <div className="mt-4 space-y-3">
             <NumberField label="Gross monthly pay" value={grossPay} onChange={setGrossPay} />
             <NumberField label="Taxable benefits" value={taxableBenefits} onChange={setTaxableBenefits} />
             <NumberField label="Voluntary pension contribution" value={voluntaryPensionContribution} onChange={setVoluntaryPensionContribution} />
@@ -88,7 +88,7 @@ export default function PayeCalculator() {
             <NumberField label="Insurance premium" value={insurancePremium} onChange={setInsurancePremium} />
             <NumberField label="Other deductions" value={otherDeductions} onChange={setOtherDeductions} />
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-2">
               <Toggle label="Include NSSF Tier I and II" checked={includeNssf} onChange={setIncludeNssf} />
               <Toggle label="Include SHIF at 2.75% min KSh 300" checked={includeShif} onChange={setIncludeShif} />
               <Toggle label="Include housing levy at 1.5%" checked={includeHousingLevy} onChange={setIncludeHousingLevy} />
@@ -96,10 +96,10 @@ export default function PayeCalculator() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="panel p-6 sm:p-8">
-            <h2 className="text-xl font-semibold text-slate-950">Estimated monthly result</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="space-y-4">
+          <div className="panel p-4 sm:p-5">
+            <h2 className="text-base font-semibold text-slate-950">Estimated monthly result</h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <Metric label="Net pay" value={currencyFormatter.format(result.netPay)} emphasis />
               <Metric label="PAYE payable" value={currencyFormatter.format(result.paye)} />
               <Metric label="Taxable pay" value={currencyFormatter.format(result.taxablePay)} />
@@ -107,9 +107,9 @@ export default function PayeCalculator() {
             </div>
           </div>
 
-          <div className="panel p-6 sm:p-8">
-            <h2 className="text-xl font-semibold text-slate-950">Breakdown</h2>
-            <div className="mt-5 divide-y divide-slate-200">
+          <div className="panel p-4 sm:p-5">
+            <h2 className="text-base font-semibold text-slate-950">Breakdown</h2>
+            <div className="mt-3 divide-y divide-slate-200">
               <Row label="NSSF pensionable pay from gross pay" value={result.pensionablePay} />
               <Row label="NSSF Tier I employee contribution" value={result.nssf.tierOne} />
               <Row label="NSSF Tier II employee contribution" value={result.nssf.tierTwo} />
@@ -125,7 +125,7 @@ export default function PayeCalculator() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
             This estimate derives NSSF pensionable pay from gross pay, then applies Tier I at 6% up to KSh 9,000 and Tier II at 6% from KSh 9,001 to KSh 108,000. Confirm payroll treatment with KRA, NSSF, or a qualified payroll professional before filing or paying tax.
           </div>
         </div>
@@ -169,15 +169,15 @@ function calculatePayeBeforeRelief(taxablePay: number) {
 function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-slate-700">{label}</span>
-      <div className="mt-2 flex rounded-md border border-slate-300 bg-white focus-within:border-slate-950">
+      <span className="text-xs font-medium text-slate-700">{label}</span>
+      <div className="mt-1.5 flex rounded-md border border-slate-300 bg-white focus-within:border-slate-950">
         <span className="flex items-center border-r border-slate-200 px-3 text-sm text-slate-500">KSh</span>
         <input
           type="number"
           min={0}
           value={value}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="min-w-0 flex-1 rounded-md px-3 py-2 text-sm text-slate-950 outline-none"
+          className="min-w-0 flex-1 rounded-md px-3 py-1.5 text-sm text-slate-950 outline-none"
         />
       </div>
     </label>
@@ -186,7 +186,7 @@ function NumberField({ label, value, onChange }: { label: string; value: number;
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
   return (
-    <label className="flex items-center justify-between gap-4 rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+    <label className="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700">
       {label}
       <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="h-4 w-4 accent-slate-950" />
     </label>
@@ -195,16 +195,16 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
 
 function Metric({ label, value, emphasis = false }: { label: string; value: string; emphasis?: boolean }) {
   return (
-    <div className={`rounded-lg border p-5 ${emphasis ? "border-slate-950 bg-slate-950 text-white" : "border-slate-200 bg-slate-50 text-slate-950"}`}>
+    <div className={`rounded-lg border p-4 ${emphasis ? "border-slate-950 bg-slate-950 text-white" : "border-slate-200 bg-slate-50 text-slate-950"}`}>
       <p className={`text-sm ${emphasis ? "text-slate-300" : "text-slate-500"}`}>{label}</p>
-      <p className="mt-2 text-2xl font-semibold">{value}</p>
+      <p className="mt-1 text-xl font-semibold">{value}</p>
     </div>
   );
 }
 
 function Row({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-3 text-sm">
+    <div className="flex items-center justify-between gap-4 py-2 text-sm">
       <span className="text-slate-600">{label}</span>
       <span className="font-semibold text-slate-950">{currencyFormatter.format(value)}</span>
     </div>

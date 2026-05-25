@@ -33,32 +33,32 @@ export default function UtilitiesPage() {
       title="Utilities for quick planning and everyday calculations."
       description="A small collection of focused tools for payroll, finance, and product planning. More utilities can be added here over time."
     >
-      <section className="section-padding">
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             {utilities.map(({ title, description, href, icon: Icon }) => (
-              <Link key={title} href={href} className="panel block p-6 transition-colors hover:border-slate-300 hover:bg-white">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-cyan-700">
-                    <Icon size={22} />
+              <Link key={title} href={href} className="panel block p-4 transition-colors hover:border-slate-300 hover:bg-white">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-md border border-slate-200 bg-slate-50 p-2 text-cyan-700">
+                    <Icon size={20} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+                    <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">{description}</p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="mt-8 rounded-lg border border-dashed border-slate-300 bg-white p-6">
-            <div className="flex items-start gap-4">
-              <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-slate-500">
-                <Calculator size={22} />
+          <div className="mt-4 rounded-lg border border-dashed border-slate-300 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-md border border-slate-200 bg-slate-50 p-2 text-slate-500">
+                <Calculator size={20} />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-slate-950">More tools coming next</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <h2 className="text-lg font-semibold text-slate-950">More tools coming next</h2>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
                   This hub is ready for additional mini apps such as loan amortization, VAT, currency planning, and project estimators.
                 </p>
               </div>
