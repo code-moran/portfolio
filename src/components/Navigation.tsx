@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { useState } from "react";
 import type { ProfileContent } from "@/types/portfolio";
 
 const navItems = [
-  { name: "About", href: "#about" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "About", href: "/#about" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Utilities", href: "/utilities" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export default function Navigation({ profile }: { profile: ProfileContent }) {
@@ -21,19 +23,19 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="#home" className="text-base font-semibold tracking-normal text-slate-950">
+        <Link href="/#home" className="text-base font-semibold tracking-normal text-slate-950">
           {profile.name}
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-950"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -67,14 +69,14 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
         <div className="border-t border-slate-200 bg-white px-4 py-4 shadow-sm md:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-2">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
             <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
               {socialLinks.map(({ icon: Icon, href, label }) => (
