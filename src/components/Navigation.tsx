@@ -60,42 +60,54 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           aria-expanded={isOpen}
           aria-controls="mobile-navigation"
           onClick={() => setIsOpen((open) => !open)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
+          className="relative z-[70] flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
-      {isOpen && (
-        <div id="mobile-navigation" className="absolute inset-x-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 py-4 shadow-sm md:hidden">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+      <button
+        type="button"
+        aria-label="Close menu"
+        aria-hidden={!isOpen}
+        onClick={() => setIsOpen(false)}
+        className={`fixed inset-0 top-16 z-[55] bg-slate-950/30 transition-opacity duration-200 md:hidden ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      <div
+        className={`fixed inset-x-0 top-16 z-[60] border-t border-slate-200 bg-white shadow-sm transition-all duration-200 md:hidden ${
+          isOpen ? "max-h-[calc(100vh-4rem)] overflow-y-auto opacity-100" : "pointer-events-none max-h-0 overflow-hidden opacity-0"
+        }`}
+      >
+        <div id="mobile-navigation" className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+            >
+              {item.name}
+            </Link>
+          ))}
+          <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                aria-label={label}
+                className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-950"
               >
-                {item.name}
-              </Link>
+                <Icon size={18} />
+              </a>
             ))}
-            <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={label}
-                  className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-950"
-                >
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
