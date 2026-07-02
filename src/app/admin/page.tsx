@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AdminPanel from "./panel";
+import AdminSessionProvider from "./session-provider";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -10,5 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminPanel />;
+  return (
+    <AdminSessionProvider>
+      <AdminPanel />
+    </AdminSessionProvider>
+  );
 }

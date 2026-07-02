@@ -1,10 +1,32 @@
 {
-  "site": {
-    "name": "Titus Njiru",
-    "title": "Titus Njiru | Systems Development Consultant",
-    "description": "Systems Development Consultant building reliable web, mobile, and data products for teams and organizations.",
-    "url": "https://titusnjiru.com",
+  "hero": {
+    "body": "I help organizations design and build web platforms, mobile products, data tools, and operational systems that are easy to use and easier to maintain.",
     "image": "/workspace.jpg",
+    "stats": [
+      {
+        "label": "Projects",
+        "value": "50+"
+      },
+      {
+        "label": "Years",
+        "value": "5+"
+      },
+      {
+        "label": "Clients",
+        "value": "20+"
+      }
+    ],
+    "kicker": "Systems Development Consultant",
+    "headline": "Practical software for teams that need clarity, speed, and reliability.",
+    "imageAlt": "A clean developer workspace",
+    "primaryCta": "View work",
+    "secondaryCta": "Start a conversation"
+  },
+  "site": {
+    "url": "https://titusnjiru.com",
+    "name": "Titus Njiru",
+    "image": "/workspace.jpg",
+    "title": "Titus Njiru | Systems Development Consultant",
     "keywords": [
       "Titus Njiru",
       "Systems Development Consultant",
@@ -12,50 +34,70 @@
       "Next.js Developer",
       "React Developer",
       "Nairobi Software Consultant"
-    ]
-  },
-  "profile": {
-    "name": "Titus Njiru",
-    "role": "Systems Development Consultant",
-    "email": "njirutitus@gmail.com",
-    "phone": "+254707015033",
-    "location": "Nairobi, Kenya",
-    "github": "https://github.com/njirutitus",
-    "linkedin": "https://www.linkedin.com/in/titusnjiru/"
-  },
-  "hero": {
-    "kicker": "Systems Development Consultant",
-    "headline": "Practical software for teams that need clarity, speed, and reliability.",
-    "body": "I help organizations design and build web platforms, mobile products, data tools, and operational systems that are easy to use and easier to maintain.",
-    "primaryCta": "View work",
-    "secondaryCta": "Start a conversation",
-    "image": "/workspace.jpg",
-    "imageAlt": "A clean developer workspace",
-    "stats": [
-      {
-        "value": "50+",
-        "label": "Projects"
-      },
-      {
-        "value": "5+",
-        "label": "Years"
-      },
-      {
-        "value": "20+",
-        "label": "Clients"
-      }
-    ]
+    ],
+    "description": "Systems Development Consultant building reliable web, mobile, and data products for teams and organizations."
   },
   "about": {
-    "kicker": "About",
-    "headline": "Experienced across product, engineering, and implementation.",
     "body": "I work with teams to turn operational needs into stable digital products. My background spans full-stack development, data science, mobile apps, and design, which helps me bridge strategy and delivery without losing sight of the user.",
-    "workTitle": "How I Work",
-    "workParagraphs": [
-      "I focus on clear requirements, sensible architecture, and interfaces that make everyday tasks faster. The goal is software that remains understandable after launch.",
-      "My consulting work often includes product scoping, system design, implementation, integrations, performance tuning, and mentoring internal teams."
+    "kicker": "About",
+    "skills": [
+      {
+        "icon": "code",
+        "skills": [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "HTML/CSS"
+        ],
+        "category": "Frontend Web Development"
+      },
+      {
+        "icon": "database",
+        "skills": [
+          "Node.js",
+          "Spring Boot",
+          "Python/Django",
+          "Laravel"
+        ],
+        "category": "Backend Development"
+      },
+      {
+        "icon": "zap",
+        "skills": [
+          "scikit-learn",
+          "pandas",
+          "matplotlib"
+        ],
+        "category": "Data Science"
+      },
+      {
+        "icon": "palette",
+        "skills": [
+          "UI/UX",
+          "Prototyping",
+          "Adobe Creative Suite"
+        ],
+        "category": "Product Design"
+      },
+      {
+        "icon": "smartphone",
+        "skills": [
+          "Android",
+          "React Native"
+        ],
+        "category": "Mobile Programming"
+      },
+      {
+        "icon": "globe",
+        "skills": [
+          "WordPress",
+          "Joomla",
+          "Mailchimp"
+        ],
+        "category": "CMS & Platforms"
+      }
     ],
-    "servicesTitle": "Core Services",
+    "headline": "Experienced across product, engineering, and implementation.",
     "services": [
       "Full-stack web development",
       "Mobile app development",
@@ -64,179 +106,137 @@
       "Performance optimization",
       "Technical consulting"
     ],
+    "workTitle": "How I Work",
     "skillsKicker": "Skills",
+    "servicesTitle": "Core Services",
     "skillsHeadline": "A practical toolkit for building and shipping.",
-    "skills": [
-      {
-        "category": "Frontend Web Development",
-        "icon": "code",
-        "skills": [
-          "React",
-          "Next.js",
-          "TypeScript",
-          "HTML/CSS"
-        ]
-      },
-      {
-        "category": "Backend Development",
-        "icon": "database",
-        "skills": [
-          "Node.js",
-          "Spring Boot",
-          "Python/Django",
-          "Laravel"
-        ]
-      },
-      {
-        "category": "Data Science",
-        "icon": "zap",
-        "skills": [
-          "scikit-learn",
-          "pandas",
-          "matplotlib"
-        ]
-      },
-      {
-        "category": "Product Design",
-        "icon": "palette",
-        "skills": [
-          "UI/UX",
-          "Prototyping",
-          "Adobe Creative Suite"
-        ]
-      },
-      {
-        "category": "Mobile Programming",
-        "icon": "smartphone",
-        "skills": [
-          "Android",
-          "React Native"
-        ]
-      },
-      {
-        "category": "CMS & Platforms",
-        "icon": "globe",
-        "skills": [
-          "WordPress",
-          "Joomla",
-          "Mailchimp"
-        ]
-      }
+    "workParagraphs": [
+      "I focus on clear requirements, sensible architecture, and interfaces that make everyday tasks faster. The goal is software that remains understandable after launch.",
+      "My consulting work often includes product scoping, system design, implementation, integrations, performance tuning, and mentoring internal teams."
     ]
   },
-  "projectsSection": {
-    "kicker": "Selected Work",
-    "headline": "Projects with clear outcomes and maintainable foundations.",
-    "body": "A sample of systems, apps, and dashboards across product categories. The emphasis is on practical workflows, readable interfaces, and reliable delivery."
+  "footer": {
+    "summary": "Systems Development Consultant building useful, maintainable software for teams and organizations.",
+    "copyright": "© 2026 Titus Njiru. All rights reserved."
+  },
+  "contact": {
+    "body": "Send a short brief, ask about availability, or reach out directly. I respond best to clear goals, constraints, and timelines.",
+    "kicker": "Contact",
+    "headline": "Let's talk through the system you want to build."
+  },
+  "profile": {
+    "name": "Titus Njiru",
+    "role": "Systems Development Consultant",
+    "email": "njirutitus@gmail.com",
+    "phone": "+254101484476",
+    "github": "https://github.com/code-moran",
+    "linkedin": "https://www.linkedin.com/in/titusnjiru/",
+    "location": "Nairobi, Kenya"
   },
   "projects": [
     {
       "id": 1,
-      "title": "E-Commerce Platform",
-      "description": "A full-stack commerce platform with authentication, payments, inventory management, and an admin workspace.",
+      "date": "2024",
+      "live": "#",
       "image": "/project1.png",
+      "title": "E-Commerce Platform",
+      "github": "#",
+      "category": "Full Stack",
+      "featured": true,
+      "description": "A full-stack commerce platform with authentication, payments, inventory management, and an admin workspace.",
       "technologies": [
         "React",
         "Node.js",
         "PostgreSQL",
         "Stripe",
         "AWS"
-      ],
-      "category": "Full Stack",
-      "date": "2024",
-      "github": "#",
-      "live": "#",
-      "featured": true
+      ]
     },
     {
       "id": 2,
-      "title": "Task Management App",
-      "description": "A collaborative task system for teams with realtime updates, structured workflows, and shared project visibility.",
+      "date": "2024",
+      "live": "#",
       "image": "/project2.jpg",
+      "title": "Task Management App",
+      "github": "#",
+      "category": "Web App",
+      "featured": true,
+      "description": "A collaborative task system for teams with realtime updates, structured workflows, and shared project visibility.",
       "technologies": [
         "Next.js",
         "TypeScript",
         "Prisma",
         "Socket.io"
-      ],
-      "category": "Web App",
-      "date": "2024",
-      "github": "#",
-      "live": "#",
-      "featured": true
+      ]
     },
     {
       "id": 3,
+      "date": "2023",
+      "live": "#",
       "title": "Mobile Fitness App",
+      "github": "#",
+      "category": "Mobile",
+      "featured": false,
       "description": "A cross-platform app for workout plans, progress tracking, and member engagement.",
       "technologies": [
         "React Native",
         "Firebase",
         "Redux",
         "Expo"
-      ],
-      "category": "Mobile",
-      "date": "2023",
-      "github": "#",
-      "live": "#",
-      "featured": false
+      ]
     },
     {
       "id": 4,
+      "date": "2023",
+      "live": "#",
       "title": "Analytics Dashboard",
+      "github": "#",
+      "category": "Data Science",
+      "featured": false,
       "description": "A business intelligence dashboard with forecasting, visual reports, and practical operating metrics.",
       "technologies": [
         "Vue.js",
         "Python",
         "TensorFlow",
         "D3.js"
-      ],
-      "category": "Data Science",
-      "date": "2023",
-      "github": "#",
-      "live": "#",
-      "featured": false
+      ]
     },
     {
       "id": 5,
+      "date": "2023",
+      "live": "#",
       "title": "Real Estate Platform",
+      "github": "#",
+      "category": "Web Platform",
+      "featured": false,
       "description": "A property listing platform with search, virtual tours, and finance tools for buyers.",
       "technologies": [
         "React",
         "GraphQL",
         "MongoDB",
         "Mapbox"
-      ],
-      "category": "Web Platform",
-      "date": "2023",
-      "github": "#",
-      "live": "#",
-      "featured": false
+      ]
     },
     {
       "id": 6,
+      "date": "2022",
+      "live": "#",
       "title": "Blockchain Voting System",
+      "github": "#",
+      "category": "Blockchain",
+      "featured": false,
       "description": "A secure voting prototype focused on transparency, auditability, and immutable records.",
       "technologies": [
         "Solidity",
         "Web3.js",
         "Ethereum",
         "React"
-      ],
-      "category": "Blockchain",
-      "date": "2022",
-      "github": "#",
-      "live": "#",
-      "featured": false
+      ]
     }
   ],
-  "contact": {
-    "kicker": "Contact",
-    "headline": "Let's talk through the system you want to build.",
-    "body": "Send a short brief, ask about availability, or reach out directly. I respond best to clear goals, constraints, and timelines."
-  },
-  "footer": {
-    "summary": "Systems Development Consultant building useful, maintainable software for teams and organizations.",
-    "copyright": "© 2026 Titus Njiru. All rights reserved."
+  "projectsSection": {
+    "body": "A sample of systems, apps, and dashboards across product categories. The emphasis is on practical workflows, readable interfaces, and reliable delivery.",
+    "kicker": "Selected Work",
+    "headline": "Projects with clear outcomes and maintainable foundations."
   }
 }

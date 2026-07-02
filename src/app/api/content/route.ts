@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions, isAdminSession } from "@/lib/auth";
 import { getPortfolioContent, savePortfolioContent } from "@/lib/portfolio-content";
 import type { PortfolioContent } from "@/types/portfolio";
 
@@ -12,8 +14,10 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  if (!isAuthorized(request)) {
-    return NextResponse.json({ message: "Invalid admin token." }, { status: 401 });
+  const session = await getServerSession(authOptions);
+
+  if (!isAdminSession(session)) {
+    return NextResponse.json({ message: "Authentication required." }, { status: 401 });
   }
 
   const content = (await request.json()) as PortfolioContent;
@@ -24,16 +28,6 @@ export async function PUT(request: Request) {
 
   await savePortfolioContent(content);
   return NextResponse.json({ ok: true, content });
-}
-
-function isAuthorized(request: Request) {
-  const adminToken = process.env.ADMIN_TOKEN;
-
-  if (!adminToken) {
-    return true;
-  }
-
-  return request.headers.get("x-admin-token") === adminToken;
 }
 
 function isPortfolioContent(content: PortfolioContent) {

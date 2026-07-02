@@ -2,6 +2,8 @@
 
 import { Save, Upload, AlertCircle, CheckCircle2, Eye } from "lucide-react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { PortfolioContent } from "@/types/portfolio";
 
@@ -13,13 +15,21 @@ export default function AdminPanel() {
   const [message, setMessage] = useState("");
   const [skillsJson, setSkillsJson] = useState("");
   const [projectsJson, setProjectsJson] = useState("");
-  const [adminToken, setAdminToken] = useState("");
+  const { status: authStatus } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     async function loadContent() {
+      if (authStatus === "loading") {
+        return;
+      }
+
+      if (authStatus === "unauthenticated") {
+        router.replace("/admin/login");
+        return;
+      }
+
       try {
-        const storedToken = window.localStorage.getItem("portfolio-admin-token") ?? "";
-        setAdminToken(storedToken);
         const response = await fetch("/api/content", { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Could not load content.");
@@ -37,7 +47,7 @@ export default function AdminPanel() {
     }
 
     loadContent();
-  }, []);
+  }, [authStatus, router]);
 
   const seoDescriptionCount = content?.site.description.length ?? 0;
   const seoTitleCount = content?.site.title.length ?? 0;
@@ -119,20 +129,18 @@ export default function AdminPanel() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-token": adminToken,
         },
         body: JSON.stringify(payload),
       });
 
       if (response.status === 401) {
-        throw new Error("Save blocked. Enter the ADMIN_TOKEN value for this deployment.");
+        throw new Error("Save blocked. Sign in again and retry.");
       }
 
       if (!response.ok) {
         throw new Error("Save failed. Check the content shape and try again.");
       }
 
-      window.localStorage.setItem("portfolio-admin-token", adminToken);
       const result = (await response.json()) as { content: PortfolioContent };
       setContent(result.content);
       setStatus("saved");
@@ -174,6 +182,13 @@ export default function AdminPanel() {
             </Link>
             <button
               type="button"
+              onClick={() => signOut({ callbackUrl: "/admin/login" })}
+              className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+            >
+              Sign out
+            </button>
+            <button
+              type="button"
               onClick={saveContent}
               disabled={status === "saving"}
               className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
@@ -200,13 +215,6 @@ export default function AdminPanel() {
               {status === "error" ? <AlertCircle className="mt-0.5 text-red-600" size={18} /> : <CheckCircle2 className="mt-0.5 text-cyan-700" size={18} />}
               <p>{message || "No unsaved errors detected."}</p>
             </div>
-          </Panel>
-
-          <Panel title="Access">
-            <Field label="Admin token" value={adminToken} onChange={setAdminToken} />
-            <p className="text-sm leading-6 text-slate-600">
-              Set `ADMIN_TOKEN` in production to require this token before content can be saved.
-            </p>
           </Panel>
 
           <Panel title="Structured Editors">
