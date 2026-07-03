@@ -21,7 +21,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   ];
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 md:backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/#home" className="min-w-0 truncate text-base font-semibold tracking-normal text-slate-950">
           {profile.name}
@@ -61,7 +61,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           aria-expanded={isOpen}
           aria-controls="mobile-navigation"
           onClick={() => setIsOpen((open) => !open)}
-          className="relative z-[70] flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
+          className="relative z-[70] flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
