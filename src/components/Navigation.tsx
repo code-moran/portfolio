@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
+import { createPortal } from "react-dom";
 import type { ProfileContent } from "@/types/portfolio";
 
 const navItems = [
@@ -14,98 +15,141 @@ const navItems = [
 
 export default function Navigation({ profile }: { profile: ProfileContent }) {
   const [isOpen, setIsOpen] = useState(false);
+  const menuId = useId();
+
   const socialLinks = [
     { icon: Github, href: profile.github, label: "GitHub" },
     { icon: Linkedin, href: profile.linkedin, label: "LinkedIn" },
     { icon: Mail, href: `mailto:${profile.email}`, label: "Email" },
   ];
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen]);
+
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const toggleMenu = useCallback(() => setIsOpen((open) => !open), []);
+
+  const mobileMenu =
+    isOpen && typeof document !== "undefined"
+      ? createPortal(
+          <>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={closeMenu}
+              className="fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden"
+            />
+            <nav
+              id={menuId}
+              aria-label="Mobile navigation"
+              className="fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden"
+            >
+              <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="rounded-md px-3 py-3 text-sm font-medium text-slate-700 active:bg-slate-100"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
+                  {socialLinks.map(({ icon: Icon, href, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target={href.startsWith("http") ? "_blank" : undefined}
+                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      aria-label={label}
+                      className="rounded-md p-3 text-slate-500 active:bg-slate-100"
+                    >
+                      <Icon size={18} className="pointer-events-none" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </nav>
+          </>,
+          document.body,
+        )
+      : null;
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 md:backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/#home" className="min-w-0 truncate text-base font-semibold tracking-normal text-slate-950">
-          {profile.name}
-        </Link>
+    <>
+      <header className="fixed inset-x-0 top-0 z-[100] isolate border-b border-slate-200 bg-white md:bg-white/95 md:backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:gap-4 lg:px-8">
+          <Link
+            href="/#home"
+            className="min-w-0 flex-1 truncate py-2 text-base font-semibold tracking-normal text-slate-950"
+          >
+            {profile.name}
+          </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-950"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
+          <div className="hidden items-center gap-8 md:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-950"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
 
-        <div className="hidden items-center gap-3 md:flex">
-          {socialLinks.map(({ icon: Icon, href, label }) => (
-            <a
-              key={label}
-              href={href}
-              target={href.startsWith("http") ? "_blank" : undefined}
-              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              aria-label={label}
-              className="rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950"
-            >
-              <Icon size={18} />
-            </a>
-          ))}
-        </div>
+          <div className="hidden items-center gap-3 md:flex">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                aria-label={label}
+                className="rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950"
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-haspopup="menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-navigation"
-          onClick={() => setIsOpen((open) => !open)}
-          className="relative z-[70] flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 hover:text-slate-950 md:hidden"
-        >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </nav>
-
-      {isOpen && (
-        <>
           <button
             type="button"
-            aria-label="Close menu"
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 top-16 z-[55] bg-slate-950/30 md:hidden"
-          />
-
-          <div id="mobile-navigation" className="fixed inset-x-0 top-16 z-[60] max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white shadow-sm md:hidden">
-            <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
-                {socialLinks.map(({ icon: Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    aria-label={label}
-                    className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-950"
-                  >
-                    <Icon size={18} />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </header>
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls={menuId}
+            onClick={toggleMenu}
+            className="relative z-[101] flex h-11 w-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 md:hidden"
+          >
+            {isOpen ? (
+              <X size={22} aria-hidden className="pointer-events-none" />
+            ) : (
+              <Menu size={22} aria-hidden className="pointer-events-none" />
+            )}
+          </button>
+        </div>
+      </header>
+      {mobileMenu}
+    </>
   );
 }

@@ -3,7 +3,13 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
+  @media (hover: none) and (pointer: coarse) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     @apply antialiased;
     font-family: Arial, Helvetica, sans-serif;
