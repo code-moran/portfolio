@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { useCallback, useEffect, useId, useState } from "react";
-import { createPortal } from "react-dom";
 import type { ProfileContent } from "@/types/portfolio";
 
 const navItems = [
@@ -48,52 +47,48 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   const closeMenu = useCallback(() => setIsOpen(false), []);
   const toggleMenu = useCallback(() => setIsOpen((open) => !open), []);
 
-  const mobileMenu =
-    isOpen && typeof document !== "undefined"
-      ? createPortal(
-          <>
-            <button
-              type="button"
-              aria-label="Close menu"
+  const mobileMenu = isOpen ? (
+    <>
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={closeMenu}
+        className="fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden"
+      />
+      <nav
+        id={menuId}
+        aria-label="Mobile navigation"
+        className="fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden"
+      >
+        <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
               onClick={closeMenu}
-              className="fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden"
-            />
-            <nav
-              id={menuId}
-              aria-label="Mobile navigation"
-              className="fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden"
+              className="rounded-md px-3 py-3 text-sm font-medium text-slate-700 active:bg-slate-100"
             >
-              <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={closeMenu}
-                    className="rounded-md px-3 py-3 text-sm font-medium text-slate-700 active:bg-slate-100"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-                <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
-                  {socialLinks.map(({ icon: Icon, href, label }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target={href.startsWith("http") ? "_blank" : undefined}
-                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      aria-label={label}
-                      className="rounded-md p-3 text-slate-500 active:bg-slate-100"
-                    >
-                      <Icon size={18} className="pointer-events-none" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </nav>
-          </>,
-          document.body,
-        )
-      : null;
+              {item.name}
+            </Link>
+          ))}
+          <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                aria-label={label}
+                className="rounded-md p-3 text-slate-500 active:bg-slate-100"
+              >
+                <Icon size={18} className="pointer-events-none" />
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </>
+  ) : null;
 
   return (
     <>
