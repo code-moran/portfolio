@@ -47,18 +47,22 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   const closeMenu = useCallback(() => setIsOpen(false), []);
   const toggleMenu = useCallback(() => setIsOpen((open) => !open), []);
 
-  const mobileMenu = isOpen ? (
+  const mobileMenu = (
     <>
       <button
         type="button"
         aria-label="Close menu"
         onClick={closeMenu}
-        className="fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden"
+        className={`fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden ${
+          isOpen ? "block" : "hidden"
+        }`}
       />
       <nav
         id={menuId}
         aria-label="Mobile navigation"
-        className="fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden"
+        className={`fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden ${
+          isOpen ? "block" : "hidden"
+        }`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
           {navItems.map((item) => (
@@ -88,7 +92,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
         </div>
       </nav>
     </>
-  ) : null;
+  );
 
   return (
     <>
@@ -134,7 +138,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
             aria-expanded={isOpen}
             aria-controls={menuId}
             onClick={toggleMenu}
-            className="relative z-[101] flex h-11 w-11 shrink-0 touch-manipulation select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 md:hidden"
+            className="relative z-[101] flex h-11 w-11 shrink-0 cursor-pointer select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 md:hidden"
           >
             {isOpen ? (
               <X size={22} aria-hidden className="pointer-events-none" />
