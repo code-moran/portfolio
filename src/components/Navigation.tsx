@@ -23,12 +23,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   ];
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    if (!isOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -39,60 +34,12 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [isOpen]);
 
   const closeMenu = useCallback(() => setIsOpen(false), []);
   const toggleMenu = useCallback(() => setIsOpen((open) => !open), []);
-
-  const mobileMenu = (
-    <>
-      <button
-        type="button"
-        aria-label="Close menu"
-        onClick={closeMenu}
-        className={`fixed inset-x-0 bottom-0 top-16 z-[9998] bg-slate-950/40 md:hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
-      />
-      <nav
-        id={menuId}
-        aria-label="Mobile navigation"
-        className={`fixed inset-x-0 top-16 z-[9999] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white shadow-lg md:hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={closeMenu}
-              className="rounded-md px-3 py-3 text-sm font-medium text-slate-700 active:bg-slate-100"
-            >
-              {item.name}
-            </Link>
-          ))}
-          <div className="mt-2 flex gap-2 border-t border-slate-200 pt-4">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                aria-label={label}
-                className="rounded-md p-3 text-slate-500 active:bg-slate-100"
-              >
-                <Icon size={18} className="pointer-events-none" />
-              </a>
-            ))}
-          </div>
-        </div>
-      </nav>
-    </>
-  );
 
   return (
     <>
@@ -132,23 +79,69 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
             ))}
           </div>
 
-          <button
-            type="button"
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isOpen}
-            aria-controls={menuId}
-            onClick={toggleMenu}
-            className="relative z-[101] flex h-11 w-11 shrink-0 cursor-pointer select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 md:hidden"
-          >
-            {isOpen ? (
-              <X size={22} aria-hidden className="pointer-events-none" />
-            ) : (
-              <Menu size={22} aria-hidden className="pointer-events-none" />
+          {/* Mobile Dropdown Container */}
+          <div className="relative md:hidden">
+            <button
+              type="button"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              aria-controls={menuId}
+              onClick={toggleMenu}
+              className="relative z-[101] flex h-11 w-11 shrink-0 cursor-pointer select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100"
+            >
+              {isOpen ? (
+                <X size={22} aria-hidden className="pointer-events-none" />
+              ) : (
+                <Menu size={22} aria-hidden className="pointer-events-none" />
+              )}
+            </button>
+
+            {/* Dropdown Panel */}
+            {isOpen && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  onClick={closeMenu}
+                  className="fixed inset-0 z-[100] h-full w-full cursor-default bg-transparent"
+                />
+                <nav
+                  id={menuId}
+                  aria-label="Mobile navigation"
+                  className="absolute right-0 top-full z-[101] mt-2 w-56 origin-top-right rounded-md border border-slate-200 bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                >
+                  <div className="flex flex-col gap-1">
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={closeMenu}
+                        className="rounded-md px-3 py-2.5 text-sm font-medium text-slate-700 active:bg-slate-100"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="mt-2 flex gap-2 border-t border-slate-200 pt-2">
+                    {socialLinks.map(({ icon: Icon, href, label }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target={href.startsWith("http") ? "_blank" : undefined}
+                        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        aria-label={label}
+                        className="rounded-md p-2 text-slate-500 active:bg-slate-100"
+                      >
+                        <Icon size={18} className="pointer-events-none" />
+                      </a>
+                    ))}
+                  </div>
+                </nav>
+              </>
             )}
-          </button>
+          </div>
         </div>
       </header>
-      {mobileMenu}
     </>
   );
 }
