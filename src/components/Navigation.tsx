@@ -153,8 +153,8 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
 
             {/* Backdrop */}
             <div
-              className={`fixed inset-0 z-[100] cursor-default bg-slate-950/20 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${
-                isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+              className={`fixed inset-0 z-[100] cursor-default bg-slate-950/20 backdrop-blur-sm transition-all duration-200 ease-in-out ${
+                isOpen ? "visible pointer-events-auto opacity-100" : "invisible pointer-events-none opacity-0"
               }`}
               aria-hidden="true"
               onClick={closeMenu}
@@ -166,8 +166,8 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
               aria-label="Mobile navigation"
               className={`absolute right-0 top-full z-[101] mt-2 w-56 origin-top-right rounded-md border border-slate-200 bg-white p-2 shadow-lg ring-1 ring-black/5 transition-all duration-200 ease-out focus:outline-none ${
                 isOpen
-                  ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
-                  : "pointer-events-none -translate-y-2 scale-95 opacity-0"
+                  ? "visible pointer-events-auto translate-y-0 scale-100 opacity-100"
+                  : "invisible pointer-events-none -translate-y-2 scale-95 opacity-0"
               }`}
             >
               <div className="flex flex-col gap-1">
