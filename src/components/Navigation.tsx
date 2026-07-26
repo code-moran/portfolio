@@ -52,8 +52,9 @@ function useActivePath() {
 }
 
 export default function Navigation({ profile }: { profile: ProfileContent }) {
+  const toggleId = useId();
   const menuId = useId();
-  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const checkboxRef = useRef<HTMLInputElement>(null);
   const activePath = useActivePath();
 
   const socialLinks = useMemo(
@@ -66,31 +67,32 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   );
 
   const closeMenu = () => {
-    if (detailsRef.current) {
-      detailsRef.current.open = false;
-    }
+    const checkbox = checkboxRef.current;
+    if (!checkbox?.checked) return;
+    checkbox.checked = false;
+    checkbox.dispatchEvent(new Event("change", { bubbles: true }));
   };
 
   useEffect(() => {
-    const details = detailsRef.current;
-    if (!details) return;
+    const checkbox = checkboxRef.current;
+    if (!checkbox) return;
 
     const syncBodyScroll = () => {
-      document.body.style.overflow = details.open ? "hidden" : "";
+      document.body.style.overflow = checkbox.checked ? "hidden" : "";
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && details.open) {
-        details.open = false;
+      if (event.key === "Escape" && checkbox.checked) {
+        closeMenu();
       }
     };
 
-    details.addEventListener("toggle", syncBodyScroll);
+    checkbox.addEventListener("change", syncBodyScroll);
     window.addEventListener("keydown", onKeyDown);
     syncBodyScroll();
 
     return () => {
-      details.removeEventListener("toggle", syncBodyScroll);
+      checkbox.removeEventListener("change", syncBodyScroll);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
@@ -140,29 +142,35 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           ))}
         </div>
 
-        {/* Native details/summary: opens without waiting for React hydration */}
-        <details ref={detailsRef} className="group relative md:hidden">
-          <summary
+        {/* Native checkbox + labels: open/close/backdrop without waiting for hydration */}
+        <div className="relative md:hidden">
+          <input
+            ref={checkboxRef}
+            id={toggleId}
+            type="checkbox"
+            className="peer sr-only"
             aria-controls={menuId}
-            aria-label="Toggle menu"
-            className="relative z-[102] flex h-11 w-11 list-none touch-manipulation select-none items-center justify-center rounded-md text-slate-700 marker:content-none active:bg-slate-100 [&::-webkit-details-marker]:hidden"
-          >
-            <Menu size={22} aria-hidden className="pointer-events-none group-open:hidden" />
-            <X size={22} aria-hidden className="pointer-events-none hidden group-open:block" />
-          </summary>
+          />
 
-          <button
-            type="button"
+          <label
+            htmlFor={toggleId}
+            aria-label="Toggle menu"
+            className="relative z-[102] flex h-11 w-11 touch-manipulation select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 peer-checked:[&_.menu-open]:hidden peer-checked:[&_.menu-close]:block"
+          >
+            <Menu size={22} aria-hidden className="menu-open pointer-events-none" />
+            <X size={22} aria-hidden className="menu-close pointer-events-none hidden" />
+          </label>
+
+          <label
+            htmlFor={toggleId}
             aria-label="Close menu"
-            tabIndex={-1}
-            onClick={closeMenu}
-            className="fixed inset-0 z-[100] cursor-default bg-slate-950/30"
+            className="pointer-events-none fixed inset-0 z-[100] cursor-default bg-slate-950/30 opacity-0 peer-checked:pointer-events-auto peer-checked:opacity-100"
           />
 
           <nav
             id={menuId}
             aria-label="Mobile navigation"
-            className="absolute right-0 top-full z-[101] mt-2 w-56 rounded-md border border-slate-200 bg-white p-2 shadow-lg ring-1 ring-black/5"
+            className="pointer-events-none invisible absolute right-0 top-full z-[101] mt-2 w-56 rounded-md border border-slate-200 bg-white p-2 opacity-0 shadow-lg ring-1 ring-black/5 peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100"
           >
             <div className="flex flex-col gap-1">
               {navItems.map((item) => {
@@ -200,7 +208,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
               ))}
             </div>
           </nav>
-        </details>
+        </div>
       </div>
     </header>
   );
