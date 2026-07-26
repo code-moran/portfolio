@@ -55,6 +55,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
   const toggleId = useId();
   const menuId = useId();
   const checkboxRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const activePath = useActivePath();
 
   const socialLinks = useMemo(
@@ -77,8 +78,10 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
     const checkbox = checkboxRef.current;
     if (!checkbox) return;
 
-    const syncBodyScroll = () => {
-      document.body.style.overflow = checkbox.checked ? "hidden" : "";
+    const onChange = () => {
+      const open = checkbox.checked;
+      setIsOpen(open);
+      document.body.style.overflow = open ? "hidden" : "";
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -87,12 +90,12 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
       }
     };
 
-    checkbox.addEventListener("change", syncBodyScroll);
+    checkbox.addEventListener("change", onChange);
     window.addEventListener("keydown", onKeyDown);
-    syncBodyScroll();
+    document.body.style.overflow = checkbox.checked ? "hidden" : "";
 
     return () => {
-      checkbox.removeEventListener("change", syncBodyScroll);
+      checkbox.removeEventListener("change", onChange);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
@@ -142,7 +145,6 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           ))}
         </div>
 
-        {/* Native checkbox + labels: open/close/backdrop without waiting for hydration */}
         <div className="relative md:hidden">
           <input
             ref={checkboxRef}
@@ -150,12 +152,13 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
             type="checkbox"
             className="peer sr-only"
             aria-controls={menuId}
+            aria-expanded={isOpen}
           />
 
           <label
             htmlFor={toggleId}
-            aria-label="Toggle menu"
-            className="relative z-[102] flex h-11 w-11 touch-manipulation select-none items-center justify-center rounded-md text-slate-700 active:bg-slate-100 peer-checked:[&_.menu-open]:hidden peer-checked:[&_.menu-close]:block"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            className="relative z-[102] flex h-11 w-11 touch-manipulation select-none items-center justify-center rounded-md text-slate-700 outline-none transition-colors active:bg-slate-100 peer-focus-visible:ring-2 peer-focus-visible:ring-cyan-700/40 peer-checked:[&_.menu-open]:hidden peer-checked:[&_.menu-close]:block"
           >
             <Menu size={22} aria-hidden className="menu-open pointer-events-none" />
             <X size={22} aria-hidden className="menu-close pointer-events-none hidden" />
@@ -164,48 +167,68 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           <label
             htmlFor={toggleId}
             aria-label="Close menu"
-            className="pointer-events-none fixed inset-0 z-[100] cursor-default bg-slate-950/30 opacity-0 peer-checked:pointer-events-auto peer-checked:opacity-100"
+            className="mobile-menu-motion pointer-events-none fixed inset-x-0 bottom-0 top-16 z-[100] cursor-default bg-slate-950/40 opacity-0 transition-opacity duration-200 ease-out peer-checked:pointer-events-auto peer-checked:opacity-100"
           />
 
           <nav
             id={menuId}
             aria-label="Mobile navigation"
-            className="pointer-events-none invisible absolute right-0 top-full z-[101] mt-2 w-56 rounded-md border border-slate-200 bg-white p-2 opacity-0 shadow-lg ring-1 ring-black/5 peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100"
+            data-open={isOpen ? "true" : "false"}
+            className="mobile-menu-motion pointer-events-none invisible fixed inset-x-0 top-16 z-[101] max-h-[min(32rem,calc(100dvh-4rem))] origin-top -translate-y-2 overflow-y-auto overscroll-contain border-b border-slate-200 bg-white opacity-0 shadow-[0_12px_40px_-16px_rgba(15,23,42,0.35)] transition-[opacity,transform,visibility] duration-200 ease-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:translate-y-0 peer-checked:opacity-100"
           >
-            <div className="flex flex-col gap-1">
-              {navItems.map((item) => {
-                const isActive = activePath === item.href;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={closeMenu}
-                    aria-current={isActive ? "page" : undefined}
-                    className={`rounded-md px-3 py-2.5 text-sm active:bg-slate-100 ${
-                      isActive
-                        ? "bg-slate-50 font-semibold text-slate-950"
-                        : "font-medium text-slate-700"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
-            <div className="mt-2 flex gap-2 border-t border-slate-200 pt-2">
-              {socialLinks.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  onClick={closeMenu}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={label}
-                  className="rounded-md p-2 text-slate-500 active:bg-slate-100"
-                >
-                  <Icon size={18} className="pointer-events-none" />
-                </a>
-              ))}
+            <div className="mx-auto flex max-w-7xl flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
+              <p className="px-1 pb-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-cyan-700">
+                Menu
+              </p>
+
+              <ul className="flex flex-col gap-1">
+                {navItems.map((item) => {
+                  const isActive = activePath === item.href;
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={closeMenu}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`flex min-h-12 items-center rounded-md px-3 text-base transition-colors active:bg-slate-100 ${
+                          isActive
+                            ? "bg-slate-50 font-semibold text-slate-950 ring-1 ring-inset ring-slate-200"
+                            : "font-medium text-slate-700"
+                        }`}
+                      >
+                        <span
+                          className={`mr-3 h-5 w-0.5 rounded-full ${
+                            isActive ? "bg-cyan-700" : "bg-transparent"
+                          }`}
+                          aria-hidden
+                        />
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div className="mt-4 border-t border-slate-200 pt-4">
+                <p className="px-1 pb-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  Connect
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {socialLinks.map(({ icon: Icon, href, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      onClick={closeMenu}
+                      target={href.startsWith("http") ? "_blank" : undefined}
+                      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-slate-600 transition-colors active:bg-slate-100 active:text-slate-950"
+                    >
+                      <Icon size={18} className="pointer-events-none" aria-hidden />
+                      <span className="text-[0.6875rem] font-medium">{label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </nav>
         </div>

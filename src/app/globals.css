@@ -42,6 +42,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-motion {
+    transition: none !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
