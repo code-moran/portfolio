@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PortfolioContent } from "@/types/portfolio";
 
-export const SITE_FALLBACK_URL = "https://titusnjiru.com";
+export const SITE_FALLBACK_URL = "https://titusnjiru.dev";
 export const SITE_NAME = "Titus Njiru";
 export const DEFAULT_OG_IMAGE = {
   url: "/opengraph-image",

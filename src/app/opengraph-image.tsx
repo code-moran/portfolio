@@ -66,7 +66,7 @@ export default function OpenGraphImage() {
           }}
         >
           <span>Nairobi, Kenya</span>
-          <span>titusnjiru.com</span>
+          <span>titusnjiru.dev</span>
         </div>
       </div>
     ),
