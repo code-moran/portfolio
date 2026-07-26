@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { ProfileContent } from "@/types/portfolio";
 
 const navItems = [
@@ -12,6 +12,14 @@ const navItems = [
   { name: "Utilities", href: "/utilities" },
   { name: "Contact", href: "/#contact" },
 ];
+
+function resolveMobileHref(href: string, pathname: string) {
+  // Same-page section links use native hash anchors so scroll + close stay reliable.
+  if (pathname === "/" && href.startsWith("/#")) {
+    return href.slice(1);
+  }
+  return href;
+}
 
 function useActivePath() {
   const pathname = usePathname();
@@ -52,6 +60,7 @@ function useActivePath() {
 }
 
 export default function Navigation({ profile }: { profile: ProfileContent }) {
+  const pathname = usePathname();
   const toggleId = useId();
   const menuId = useId();
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -67,12 +76,14 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
     [profile],
   );
 
-  const closeMenu = () => {
+  const closeMenu = useCallback(() => {
     const checkbox = checkboxRef.current;
-    if (!checkbox?.checked) return;
-    checkbox.checked = false;
-    checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-  };
+    if (checkbox) {
+      checkbox.checked = false;
+    }
+    setIsOpen(false);
+    document.body.style.overflow = "";
+  }, []);
 
   useEffect(() => {
     const checkbox = checkboxRef.current;
@@ -92,14 +103,35 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
 
     checkbox.addEventListener("change", onChange);
     window.addEventListener("keydown", onKeyDown);
-    document.body.style.overflow = checkbox.checked ? "hidden" : "";
 
     return () => {
       checkbox.removeEventListener("change", onChange);
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [closeMenu]);
+
+  // Close when any link inside the mobile sheet is activated (capture beats Next.js routing quirks).
+  useEffect(() => {
+    const nav = document.getElementById(menuId);
+    if (!nav) return;
+
+    const onNavClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest("a")) {
+        closeMenu();
+      }
+    };
+
+    nav.addEventListener("click", onNavClick, true);
+    window.addEventListener("hashchange", closeMenu);
+
+    return () => {
+      nav.removeEventListener("click", onNavClick, true);
+      window.removeEventListener("hashchange", closeMenu);
+    };
+  }, [menuId, closeMenu]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-[100] isolate border-b border-slate-200 bg-white md:bg-white/95 md:backdrop-blur">
@@ -184,26 +216,46 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
               <ul className="flex flex-col gap-1">
                 {navItems.map((item) => {
                   const isActive = activePath === item.href;
+                  const href = resolveMobileHref(item.href, pathname);
+                  const className = `flex min-h-12 items-center rounded-md px-3 text-base transition-colors active:bg-slate-100 ${
+                    isActive
+                      ? "bg-slate-50 font-semibold text-slate-950 ring-1 ring-inset ring-slate-200"
+                      : "font-medium text-slate-700"
+                  }`;
+
                   return (
                     <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        onClick={closeMenu}
-                        aria-current={isActive ? "page" : undefined}
-                        className={`flex min-h-12 items-center rounded-md px-3 text-base transition-colors active:bg-slate-100 ${
-                          isActive
-                            ? "bg-slate-50 font-semibold text-slate-950 ring-1 ring-inset ring-slate-200"
-                            : "font-medium text-slate-700"
-                        }`}
-                      >
-                        <span
-                          className={`mr-3 h-5 w-0.5 rounded-full ${
-                            isActive ? "bg-cyan-700" : "bg-transparent"
-                          }`}
-                          aria-hidden
-                        />
-                        {item.name}
-                      </Link>
+                      {href.startsWith("#") ? (
+                        <a
+                          href={href}
+                          onClick={closeMenu}
+                          aria-current={isActive ? "page" : undefined}
+                          className={className}
+                        >
+                          <span
+                            className={`mr-3 h-5 w-0.5 rounded-full ${
+                              isActive ? "bg-cyan-700" : "bg-transparent"
+                            }`}
+                            aria-hidden
+                          />
+                          {item.name}
+                        </a>
+                      ) : (
+                        <Link
+                          href={href}
+                          onClick={closeMenu}
+                          aria-current={isActive ? "page" : undefined}
+                          className={className}
+                        >
+                          <span
+                            className={`mr-3 h-5 w-0.5 rounded-full ${
+                              isActive ? "bg-cyan-700" : "bg-transparent"
+                            }`}
+                            aria-hidden
+                          />
+                          {item.name}
+                        </Link>
+                      )}
                     </li>
                   );
                 })}
