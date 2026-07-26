@@ -49,6 +49,7 @@ export default function HeroSection({ hero, profile }: { hero: HeroContent; prof
             width={900}
             height={1100}
             priority
+            sizes="(max-width: 1024px) 100vw, 45vw"
             className="aspect-[4/5] h-full w-full object-cover"
           />
         </div>

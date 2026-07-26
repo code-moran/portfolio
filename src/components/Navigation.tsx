@@ -144,7 +144,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
           {profile.name}
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => {
             const isActive = activePath === item.href;
             return (
@@ -160,7 +160,7 @@ export default function Navigation({ profile }: { profile: ProfileContent }) {
               </Link>
             );
           })}
-        </div>
+        </nav>
 
         <div className="hidden items-center gap-3 md:flex">
           {socialLinks.map(({ icon: Icon, href, label }) => (

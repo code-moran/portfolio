@@ -7,7 +7,7 @@ export default function Footer({ profile, footer }: { profile: ProfileContent; f
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
           <div>
-            <h2 className="text-lg font-semibold text-slate-950">{profile.name}</h2>
+            <p className="text-lg font-semibold text-slate-950">{profile.name}</p>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{footer.summary}</p>
           </div>
 

@@ -44,20 +44,47 @@ export default function ContactSection({
         <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="space-y-5">
             {[
-              { icon: Mail, label: "Email", value: profile.email, href: `mailto:${profile.email}` },
-              { icon: Phone, label: "Phone", value: profile.phone, href: `tel:${profile.phone}` },
-              { icon: MapPin, label: "Location", value: profile.location, href: "#" },
-            ].map(({ icon: Icon, label, value, href }) => (
-              <a key={label} href={href} className="panel flex items-center gap-4 p-5 transition-colors hover:border-slate-300">
-                <span className="rounded-md border border-slate-200 bg-slate-50 p-3 text-cyan-700">
-                  <Icon size={20} />
-                </span>
-                <span>
-                  <span className="block text-sm text-slate-500">{label}</span>
-                  <span className="mt-1 block font-medium text-slate-950">{value}</span>
-                </span>
-              </a>
-            ))}
+              { icon: Mail, label: "Email", value: profile.email, href: `mailto:${profile.email}` as string | null },
+              { icon: Phone, label: "Phone", value: profile.phone, href: `tel:${profile.phone}` as string | null },
+              {
+                icon: MapPin,
+                label: "Location",
+                value: profile.location,
+                href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(profile.location)}`,
+              },
+            ].map(({ icon: Icon, label, value, href }) => {
+              const content = (
+                <>
+                  <span className="rounded-md border border-slate-200 bg-slate-50 p-3 text-cyan-700">
+                    <Icon size={20} aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-sm text-slate-500">{label}</span>
+                    <span className="mt-1 block font-medium text-slate-950">{value}</span>
+                  </span>
+                </>
+              );
+
+              if (!href) {
+                return (
+                  <div key={label} className="panel flex items-center gap-4 p-5">
+                    {content}
+                  </div>
+                );
+              }
+
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="panel flex items-center gap-4 p-5 transition-colors hover:border-slate-300"
+                >
+                  {content}
+                </a>
+              );
+            })}
 
             <div className="panel p-5">
               <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Profiles</h3>
